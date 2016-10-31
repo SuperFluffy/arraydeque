@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/arraydeque/src/lib.rs.html#1-2622' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/arraydeque/src/lib.rs.html#1-2624' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>A circular buffer with fixed capacity.
 Requires Rust 1.12+</p>
 
@@ -67,7 +67,6 @@ are not required to be copyable</p>
 
 <ul>
 <li>Optional, enabled by default</li>
-<li>Requires Rust 1.6 <em>to disable</em></li>
 <li>Use libstd</li>
 </ul></li>
 <li><p><code>use_union</code></p>
@@ -92,7 +91,7 @@ size array for ArrayVec storage.</li>
 <p>First, add the following to your <code>Cargo.toml</code>:</p>
 
 <pre><code class="language-toml">[dependencies]
-arraydeque = &quot;0.1.2&quot;
+arraydeque = &quot;0.1.3&quot;
 </code></pre>
 
 <p>Next, add this to your crate root:</p>
@@ -105,7 +104,7 @@ instead like to use arraydeque in a <code>#![no_std]</code> situation or crate y
 request this via:</p>
 
 <pre><code class="language-toml">[dependencies]
-arraydeque = { version = &quot;0.1.2&quot;, default-features = false }
+arraydeque = { version = &quot;0.1.3&quot;, default-features = false }
 </code></pre>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
@@ -189,7 +188,7 @@ arraydeque = { version = &quot;0.1.2&quot;, default-features = false }
 generic-array = &quot;0.5.1&quot;
 
 [dependencies.arraydeque]
-version = &quot;0.1.2&quot;
+version = &quot;0.1.3&quot;
 features = [&quot;use_generic_array&quot;]
 </code></pre>
 

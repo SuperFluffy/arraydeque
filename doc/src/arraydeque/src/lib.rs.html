@@ -2664,6 +2664,8 @@
 <span id="2620">2620</span>
 <span id="2621">2621</span>
 <span id="2622">2622</span>
+<span id="2623">2623</span>
+<span id="2624">2624</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A circular buffer with fixed capacity.</span>
 <span class='doccomment'>//! Requires Rust 1.12+</span>
@@ -2682,7 +2684,6 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! - `std`</span>
 <span class='doccomment'>//!   - Optional, enabled by default</span>
-<span class='doccomment'>//!   - Requires Rust 1.6 *to disable*</span>
 <span class='doccomment'>//!   - Use libstd</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//!</span>
@@ -2706,7 +2707,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```toml</span>
 <span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! arraydeque = &quot;0.1.2&quot;</span>
+<span class='doccomment'>//! arraydeque = &quot;0.1.3&quot;</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Next, add this to your crate root:</span>
@@ -2721,7 +2722,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```toml</span>
 <span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! arraydeque = { version = &quot;0.1.2&quot;, default-features = false }</span>
+<span class='doccomment'>//! arraydeque = { version = &quot;0.1.3&quot;, default-features = false }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! # Examples</span>
@@ -2811,7 +2812,7 @@
 <span class='doccomment'>//! generic-array = &quot;0.5.1&quot;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! [dependencies.arraydeque]</span>
-<span class='doccomment'>//! version = &quot;0.1.2&quot;</span>
+<span class='doccomment'>//! version = &quot;0.1.3&quot;</span>
 <span class='doccomment'>//! features = [&quot;use_generic_array&quot;]</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//! ```</span>
@@ -4541,6 +4542,7 @@
 }
 
 <span class='doccomment'>/// `ArrayDeque` iterator</span>
+<span class='attribute'>#[<span class='ident'>must_use</span> <span class='op'>=</span> <span class='string'>&quot;iterator adaptors are lazy and do nothing unless consumed&quot;</span>]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>ring</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>T</span>],
@@ -4582,6 +4584,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ExactSizeIterator</span> <span class='kw'>for</span> <span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {}
 
 <span class='doccomment'>/// `ArrayDeque` mutable iterator</span>
+<span class='attribute'>#[<span class='ident'>must_use</span> <span class='op'>=</span> <span class='string'>&quot;iterator adaptors are lazy and do nothing unless consumed&quot;</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
     <span class='ident'>ring</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>T</span>],
     <span class='ident'>head</span>: <span class='ident'>usize</span>,
@@ -4630,6 +4633,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>ExactSizeIterator</span> <span class='kw'>for</span> <span class='ident'>IterMut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {}
 
 <span class='doccomment'>/// A by-value `ArrayDeque` iterator</span>
+<span class='attribute'>#[<span class='ident'>must_use</span> <span class='op'>=</span> <span class='string'>&quot;iterator adaptors are lazy and do nothing unless consumed&quot;</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>A</span>: <span class='ident'>Array</span><span class='op'>&gt;</span> {
     <span class='ident'>inner</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span><span class='ident'>A</span><span class='op'>&gt;</span>,
 }
