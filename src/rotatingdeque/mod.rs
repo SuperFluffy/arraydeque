@@ -1301,6 +1301,89 @@ impl<A: Array> RotatingDeque<A> {
     }
 }
 
+impl<A, I> RotatingDeque<A>
+    where A: Array<Item=I>,
+          I: Clone,
+{
+    /// Appends an element to the back of a buffer by cloning into the memory location; overwrites
+    /// the tail if full.
+    ///
+    /// Return `None` if the push is possible without overwriting an element, otherwise return
+    /// `Some(overwritten)` (which happens when the underlying storage is full).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use arraydeque::RotatingDeque;
+    ///
+    /// let mut buf: RotatingDeque<[_; 3]> = RotatingDeque::new();
+    /// buf.push_back(1);
+    /// buf.push_back(3);
+    /// let overwritten = buf.push_back(5);
+    ///
+    /// assert_eq!(buf.back(), Some(&5));
+    /// assert_eq!(overwritten, Some(1));
+    /// ```
+    pub fn push_back_clone(&mut self, element: &A::Item) -> Option<A::Item> {
+        if self.is_full() {
+            unsafe {
+                let tail = self.tail();
+                let head = self.head();
+                self.set_head(Self::wrap_add(head,1));
+                self.set_tail(Self::wrap_add(tail,1));
+                Some(self.buffer_clone_from(head, element));
+                Some(self.buffer_read(tail))
+            }
+        } else {
+            unsafe {
+                let head = self.head();
+                self.set_head(Self::wrap_add(head, 1));
+                self.buffer_clone_from(head, element);
+            }
+            None
+        }
+    }
+
+    /// Inserts an element first in the sequence by cloning into the memory location, overwriting
+    /// the head if full.
+    ///
+    /// Return `None` if the push is possible without overwriting an element, otherwise return
+    /// `Some(overwritten)` (which happens when the underlying storage is full).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use arraydeque::RotatingDeque;
+    ///
+    /// let mut buf: RotatingDeque<[_; 3]> = RotatingDeque::new();
+    /// buf.push_front(1);
+    /// buf.push_front(2);
+    /// let overwritten = buf.push_front(3);
+    ///
+    /// assert_eq!(buf.front(), Some(&3));
+    /// assert_eq!(overwritten, Some(1));
+    /// ```
+    pub fn push_front_clone(&mut self, element: &A::Item) -> Option<A::Item> {
+        if self.is_full() {
+            unsafe {
+                let new_tail = Self::wrap_sub(self.tail(), 1);
+                let new_head = Self::wrap_sub(self.head(), 1);
+                self.set_head(new_head);
+                self.set_tail(new_tail);
+                self.buffer_clone_from(new_tail, element);
+                Some(self.buffer_read(new_head))
+            }
+        } else {
+            unsafe {
+                let new_tail = Self::wrap_sub(self.tail(), 1);
+                self.set_tail(new_tail);
+                self.buffer_clone_from(new_tail, element);
+            }
+            None
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::RotatingDeque;
@@ -1316,6 +1399,26 @@ mod tests {
         tester.push_back(2);
         tester.push_back(3);
         tester.push_back(4);
+        assert_eq!(tester.len(), 4);
+
+        assert_eq!(tester.pop_front(), Some(1));
+        assert_eq!(tester.pop_front(), Some(2));
+        assert_eq!(tester.len(), 2);
+        assert_eq!(tester.pop_front(), Some(3));
+        assert_eq!(tester.pop_front(), Some(4));
+        assert_eq!(tester.pop_front(), None);
+    }
+
+    #[test]
+    fn test_simple_clone() {
+        let mut tester: RotatingDeque<[_; 8]> = RotatingDeque::new();
+        assert_eq!(tester.capacity(), 7);
+        assert_eq!(tester.len(), 0);
+
+        tester.push_back_clone(&1);
+        tester.push_back_clone(&2);
+        tester.push_back_clone(&3);
+        tester.push_back_clone(&4);
         assert_eq!(tester.len(), 4);
 
         assert_eq!(tester.pop_front(), Some(1));
@@ -1346,11 +1449,38 @@ mod tests {
     }
 
     #[test]
+    fn test_simple_reversely_clone() {
+        let mut tester: RotatingDeque<[_; 8]> = RotatingDeque::new();
+        assert_eq!(tester.capacity(), 7);
+        assert_eq!(tester.len(), 0);
+
+        tester.push_front_clone(&1);
+        tester.push_front_clone(&2);
+        tester.push_front_clone(&3);
+        tester.push_front_clone(&4);
+        assert_eq!(tester.len(), 4);
+        assert_eq!(tester.pop_back(), Some(1));
+        assert_eq!(tester.pop_back(), Some(2));
+        assert_eq!(tester.len(), 2);
+        assert_eq!(tester.pop_back(), Some(3));
+        assert_eq!(tester.pop_back(), Some(4));
+        assert_eq!(tester.pop_back(), None);
+    }
+
+    #[test]
     fn test_overwrite() {
         let mut tester: RotatingDeque<[_; 3]> = RotatingDeque::new();
         assert_eq!(tester.push_back(1), None);
         assert_eq!(tester.push_back(2), None);
         assert_eq!(tester.push_back(3), Some(1));
+    }
+
+    #[test]
+    fn test_overwrite_clone() {
+        let mut tester: RotatingDeque<[_; 3]> = RotatingDeque::new();
+        assert_eq!(tester.push_back_clone(&1), None);
+        assert_eq!(tester.push_back_clone(&2), None);
+        assert_eq!(tester.push_back_clone(&3), Some(1));
     }
 
     #[test]

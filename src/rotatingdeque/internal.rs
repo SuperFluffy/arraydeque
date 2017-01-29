@@ -226,3 +226,13 @@ impl<A: Array> RotatingDeque<A> {
         ptr::write(self.ptr_mut().offset(offset as isize), element);
     }
 }
+
+impl<A, I> RotatingDeque<A>
+    where A: Array<Item=I>,
+          I: Clone
+{
+    #[inline]
+    pub unsafe fn buffer_clone_from(&mut self, offset: usize, element: &A::Item) {
+        (&mut *self.ptr_mut().offset(offset as isize)).clone_from(element);
+    }
+}
